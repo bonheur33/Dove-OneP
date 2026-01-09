@@ -37,26 +37,6 @@ function Contact() {
         </p>
       </div>
 
-      {/* BOUTON DE CONTACT RAPIDE */}
-      <button
-        onClick={() => window.location.href = "mailto:contact@doveservices.cg"}
-        style={{
-          marginTop: "20px",
-          padding: "12px 36px",
-          backgroundColor: "#ff9e1d",
-          border: "none",
-          borderRadius: "6px",
-          color: "#1e1e1e",
-          fontWeight: "600",
-          fontSize: "1rem",
-          cursor: "pointer",
-          transition: "all 0.3s ease",
-        }}
-        onMouseOver={e => e.currentTarget.style.backgroundColor = "#e68a00"}
-        onMouseOut={e => e.currentTarget.style.backgroundColor = "#ff9e1d"}
-      >
-        Envoyer un email
-      </button>
     </section>
   );
 }

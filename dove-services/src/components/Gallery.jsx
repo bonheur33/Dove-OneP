@@ -1,25 +1,36 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 // Médias de la galerie
 const media = [
   { type: "image", src: "/images/galerie1.jpg", alt: "Projet communication 1" },
-  { type: "image", src: "/images/galerie2.JPG", alt: "Projet audiovisuel 2" },
-  { type: "image", src: "/images/galerie3.JPG", alt: "Projet événementiel 3" },
-  { type: "video", src: "/videos/clip1.mp4", alt: "Vidéo événement 1" },
-  { type: "image", src: "/images/galerie4.JPG", alt: "Projet communication 4" },
+  { type: "image", src: "/images/galerie2.jpg", alt: "Projet audiovisuel 2" },
+  { type: "image", src: "/images/galerie3.jpg", alt: "Projet événementiel 3" },
+  { type: "video", src: "/videos/cip2.mp4", alt: "Vidéo événement 1" },
+  { type: "image", src: "/images/galerie4.jpg", alt: "Projet communication 4" },
 ];
 
 function Gallery() {
   const [current, setCurrent] = useState(0);
+  const videoRef = useRef(null);
 
-  // Slider automatique (pause sur mobile acceptable)
+  // ⏱ Auto-slide uniquement pour les images
   useEffect(() => {
+    if (media[current].type === "video") return;
+
     const interval = setInterval(() => {
       setCurrent((prev) => (prev + 1) % media.length);
     }, 5000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [current]);
+
+  // 🔄 Forcer la lecture automatique pour les vidéos
+  useEffect(() => {
+    if (media[current].type === "video" && videoRef.current) {
+      videoRef.current.currentTime = 0;
+      videoRef.current.play().catch(() => {});
+    }
+  }, [current]);
 
   const prevSlide = () =>
     setCurrent((prev) => (prev - 1 + media.length) % media.length);
@@ -44,7 +55,7 @@ function Gallery() {
           marginBottom: "15px",
         }}
       >
-        Galerie
+        Nos réalisations
       </h2>
 
       <p
@@ -66,7 +77,7 @@ function Gallery() {
           width: "100%",
           maxWidth: "900px",
           margin: "0 auto",
-          borderRadius: "10px",
+          borderRadius: "12px",
           overflow: "hidden",
           background: "#000",
         }}
@@ -84,15 +95,23 @@ function Gallery() {
           />
         ) : (
           <video
+            ref={videoRef}
             src={media[current].src}
-            controls
+            autoPlay
+            muted
+            loop
             playsInline
+            preload="auto"
+            poster="/images/video-cover.jpg" // Assurez-vous d'avoir cette image
             style={{
               width: "100%",
               height: "clamp(240px, 60vw, 420px)",
               objectFit: "cover",
+              backgroundColor: "#000",
             }}
-          />
+          >
+            Votre navigateur ne supporte pas la vidéo.
+          </video>
         )}
 
         {/* BOUTONS */}
@@ -102,7 +121,7 @@ function Gallery() {
           style={{
             position: "absolute",
             top: "50%",
-            left: "10px",
+            left: "12px",
             transform: "translateY(-50%)",
             background: "#ff9e1d",
             border: "none",
@@ -110,7 +129,7 @@ function Gallery() {
             height: "42px",
             borderRadius: "50%",
             cursor: "pointer",
-            fontSize: "1.2rem",
+            fontSize: "1.4rem",
             fontWeight: "700",
           }}
         >
@@ -123,7 +142,7 @@ function Gallery() {
           style={{
             position: "absolute",
             top: "50%",
-            right: "10px",
+            right: "12px",
             transform: "translateY(-50%)",
             background: "#ff9e1d",
             border: "none",
@@ -131,7 +150,7 @@ function Gallery() {
             height: "42px",
             borderRadius: "50%",
             cursor: "pointer",
-            fontSize: "1.2rem",
+            fontSize: "1.4rem",
             fontWeight: "700",
           }}
         >

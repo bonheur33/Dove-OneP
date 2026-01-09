@@ -37,7 +37,7 @@ function About() {
         {/* IMAGE DE L'ÉQUIPE */}
         <div style={{ width: "100%", maxWidth: "500px", textAlign: "center" }}>
           <img
-            src="/images/equipe-dove.jpeg" // place ton image dans public/images/
+            src="/images/equipe-dove.JPG" // place ton image dans public/images/
             alt="Équipe Dove Services"
             style={{
               width: "100%",
@@ -52,13 +52,13 @@ function About() {
         {/* TEXTE DESCRIPTIF */}
         <div style={{ maxWidth: "800px", fontSize: "1.05rem", lineHeight: "1.8" }}>
           <p>
-            <strong>Qui sommes-nous ?</strong><br />
+            <strong style={{ color: "#ff9e1d", marginBottom: "12px" }}>Qui sommes-nous ?</strong><br />
             Dove Services est une agence de communication et de production dédiée à la conception
             de solutions visuelles et médiatiques professionnelles.
           </p>
 
           <p>
-            <strong>Notre mission :</strong><br />
+            <strong style={{ color: "#ff9e1d", marginBottom: "12px" }}>Notre mission :</strong><br />
             Accompagner nos clients dans la valorisation de leur image, la promotion de leurs activités
             et la réussite de leurs événements.
           </p>
@@ -69,14 +69,14 @@ function About() {
           </p>
 
           <p>
-            <strong>Notre vision :</strong><br />
+            <strong style={{ color: "#ff9e1d", marginBottom: "12px" }}>Notre vision :</strong><br />
             Devenir une agence de référence en République du Congo dans le domaine de la communication,
             de la production audiovisuelle et de l’événementiel, au service du développement des entreprises,
             des institutions et des organisations.
           </p>
 
           <p>
-            <strong>Nos valeurs :</strong><br />
+            <strong style={{ color: "#ff9e1d", marginBottom: "12px" }}>Nos valeurs :</strong><br />
             - Professionnalisme et rigueur<br />
             - Créativité et innovation<br />
             - Respect des délais et des engagements<br />
