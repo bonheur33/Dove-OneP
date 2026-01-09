@@ -8,7 +8,7 @@ function EventOffers() {
   const formRef = useRef(null);
 
   const redirectWhatsApp = () => {
-    const phone = "24264237233";
+    const phone = "242064237233";
     const text = encodeURIComponent(
       "Bonjour Dove Services, je viens d’envoyer une demande de réservation via votre site."
     );
