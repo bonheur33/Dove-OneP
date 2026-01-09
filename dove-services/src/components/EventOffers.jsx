@@ -1,19 +1,14 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import emailjs from "emailjs-com";
 import Modal from "./Modal.jsx";
 
 function EventOffers() {
   const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [success, setSuccess] = useState(false);
   const formRef = useRef(null);
 
-  // Sécurise le rendu après lazy loading
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   const redirectWhatsApp = () => {
-    const phone = "24264237233"; // ⚠️ SANS +
+    const phone = "24264237233";
     const text = encodeURIComponent(
       "Bonjour Dove Services, je viens d’envoyer une demande de réservation via votre site."
     );
@@ -23,7 +18,6 @@ function EventOffers() {
   const sendReservation = (e) => {
     e.preventDefault();
 
-    // 1️⃣ Envoi Email
     emailjs
       .sendForm(
         "service_yo5eira",
@@ -32,12 +26,10 @@ function EventOffers() {
         "BesHPujC5p9dQUIgj"
       )
       .then(() => {
-        // 2️⃣ Enregistrement backend
+        // Backend optionnel
         fetch("http://localhost:8000/api/reservations/create/", {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             nom: e.target.nom.value,
             email: e.target.email.value,
@@ -46,50 +38,61 @@ function EventOffers() {
             date_evenement: e.target.date_evenement.value,
             message: e.target.message.value,
           }),
-        }).catch(() => {
-          console.warn("Backend indisponible, email déjà envoyé.");
-        });
+        }).catch(() => {});
 
-        setOpen(false);
+        setSuccess(true);
         e.target.reset();
-        redirectWhatsApp();
+
+        // Fermer modal + WhatsApp après 2s
+        setTimeout(() => {
+          setOpen(false);
+          setSuccess(false);
+          redirectWhatsApp();
+        }, 2000);
       })
       .catch(() => {
         alert("Erreur lors de l’envoi. Veuillez réessayer.");
       });
   };
 
-  if (!mounted) return null;
-
   return (
     <section
       id="event-offers"
-      className="event-offers reveal"
       style={{
         background: "#383838",
         color: "#ffffff",
-        padding: "80px 8%",
+        padding: "60px 5%",
         textAlign: "center",
       }}
     >
       <h2
         style={{
           color: "#ff9e1d",
-          fontSize: "2.5rem",
+          fontSize: "clamp(2rem, 5vw, 2.5rem)",
           marginBottom: "20px",
         }}
       >
         Offres événementielles
       </h2>
 
-      <p style={{ fontSize: "1.2rem", marginBottom: "35px" }}>
-        Conférences, séminaires, ateliers et événements privés.
+      <p
+        style={{
+          fontSize: "clamp(1rem, 2.5vw, 1.2rem)",
+          marginBottom: "30px",
+          maxWidth: "700px",
+          marginLeft: "auto",
+          marginRight: "auto",
+        }}
+      >
+        Conférences, séminaires, ateliers et événements privés. Réservez votre
+        événement facilement et rapidement.
       </p>
 
+      {/* BOUTON RÉSERVATION */}
       <button
         onClick={() => setOpen(true)}
         style={{
-          padding: "14px 34px",
+          padding: "14px 36px",
           backgroundColor: "#ff9e1d",
           border: "none",
           borderRadius: "6px",
@@ -97,76 +100,123 @@ function EventOffers() {
           color: "#1e1e1e",
           fontWeight: "600",
           fontSize: "1rem",
+          marginBottom: "20px",
+          transition: "background 0.3s ease",
         }}
+        onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#e68a00")}
+        onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#ff9e1d")}
       >
         Réserver un événement
       </button>
 
+      {/* MODAL */}
       {open && (
         <Modal onClose={() => setOpen(false)}>
-          <h3 style={{ marginBottom: "20px" }}>
-            Réservation d’événement
-          </h3>
-
-          <form
-            ref={formRef}
-            onSubmit={sendReservation}
+          <div
             style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "12px",
+              maxWidth: "400px",
+              margin: "0 auto",
+              textAlign: "center",
             }}
           >
-            <input name="nom" placeholder="Nom complet" required />
-            <input
-              name="email"
-              type="email"
-              placeholder="Adresse email"
-              required
-            />
-            <input
-              name="telephone"
-              placeholder="Téléphone / WhatsApp"
-              required
-            />
+            <h3 style={{ marginBottom: "15px" }}>Réservation d’événement</h3>
 
-            <select name="type_evenement" required>
-              <option value="">Type d’événement</option>
-              <option>Conférence</option>
-              <option>Séminaire</option>
-              <option>Atelier / Formation</option>
-              <option>Mariage</option>
-              <option>Anniversaire</option>
-              <option>Autre</option>
-            </select>
+            {/* MESSAGE DE SUCCÈS */}
+            {success && (
+              <div
+                style={{
+                  background: "#1e1e1e",
+                  border: "1px solid #ff9e1d",
+                  color: "#ff9e1d",
+                  padding: "12px",
+                  borderRadius: "6px",
+                  marginBottom: "15px",
+                  fontWeight: "600",
+                }}
+              >
+                ✅ Demande envoyée avec succès !
+                <br />
+                Nous vous contacterons très rapidement.
+              </div>
+            )}
 
-            <input
-              name="date_evenement"
-              type="date"
-              required
-            />
-
-            <textarea
-              name="message"
-              placeholder="Décrivez brièvement votre événement"
-              rows="4"
-            />
-
-            <button
-              type="submit"
+            {/* FORMULAIRE */}
+            <form
+              ref={formRef}
+              onSubmit={sendReservation}
               style={{
-                padding: "12px",
-                background: "#ff9e1d",
-                color: "#1e1e1e",
-                border: "none",
-                borderRadius: "6px",
-                cursor: "pointer",
-                fontWeight: "600",
+                display: "flex",
+                flexDirection: "column",
+                gap: "12px",
               }}
             >
-              Envoyer la demande
-            </button>
-          </form>
+              <input
+                name="nom"
+                placeholder="Nom complet"
+                required
+                style={{ padding: "10px", borderRadius: "6px", border: "1px solid #ccc" }}
+              />
+              <input
+                name="email"
+                type="email"
+                placeholder="Adresse email"
+                required
+                style={{ padding: "10px", borderRadius: "6px", border: "1px solid #ccc" }}
+              />
+              <input
+                name="telephone"
+                placeholder="Téléphone / WhatsApp"
+                required
+                style={{ padding: "10px", borderRadius: "6px", border: "1px solid #ccc" }}
+              />
+
+              <select
+                name="type_evenement"
+                required
+                style={{ padding: "10px", borderRadius: "6px", border: "1px solid #ccc" }}
+              >
+                <option value="">Type d’événement</option>
+                <option>Conférence</option>
+                <option>Séminaire</option>
+                <option>Atelier / Formation</option>
+                <option>Mariage</option>
+                <option>Anniversaire</option>
+                <option>Autre</option>
+              </select>
+
+              <input
+                name="date_evenement"
+                type="date"
+                required
+                style={{ padding: "10px", borderRadius: "6px", border: "1px solid #ccc" }}
+              />
+
+              <textarea
+                name="message"
+                placeholder="Décrivez brièvement votre événement"
+                rows="4"
+                style={{ padding: "10px", borderRadius: "6px", border: "1px solid #ccc" }}
+              />
+
+              <button
+                type="submit"
+                style={{
+                  padding: "12px",
+                  background: "#ff9e1d",
+                  border: "none",
+                  borderRadius: "6px",
+                  cursor: "pointer",
+                  fontWeight: "600",
+                  marginTop: "10px",
+                  transition: "background 0.3s ease",
+                }}
+                onMouseOver={(e) => (e.currentTarget.style.backgroundColor = "#e68a00")}
+                onMouseOut={(e) => (e.currentTarget.style.backgroundColor = "#ff9e1d")}
+              >
+                Envoyer la demande
+              </button>
+            </form>
+          </div>
         </Modal>
       )}
     </section>

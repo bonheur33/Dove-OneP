@@ -14,21 +14,70 @@ function Hero() {
   };
 
   return (
-    <section className="hero" style={{ padding: "100px 8%", textAlign: "center", background: "#383838", color: "#ffffff" }}>
-      <h1 style={{ color: "#ff9e1d" }}>Dove Services</h1>
-      <p>Agence de communication visuelle, production audiovisuelle et événementiel clé en main à Brazzaville.</p>
-      <div style={{ marginTop: "20px" }}>
+    <section
+      className="hero"
+      style={{
+        padding: "80px 5%",
+        textAlign: "center",
+        background: "#383838",
+        color: "#ffffff",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        gap: "20px",
+      }}
+    >
+      {/* TITRE */}
+      <h1
+        style={{
+          color: "#ff9e1d",
+          fontSize: "clamp(2rem, 6vw, 3rem)",
+          fontWeight: "700",
+          marginBottom: "10px",
+        }}
+      >
+        Dove Services
+      </h1>
+
+      {/* DESCRIPTION */}
+      <p
+        style={{
+          fontSize: "clamp(1rem, 3vw, 1.25rem)",
+          maxWidth: "650px",
+          lineHeight: "1.6",
+        }}
+      >
+        Agence de communication visuelle, production audiovisuelle et
+        événementiel clé en main à Brazzaville.
+      </p>
+
+      {/* BOUTONS */}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "12px",
+          marginTop: "20px",
+          width: "100%",
+          maxWidth: "400px",
+        }}
+      >
         <button
           onClick={scrollToContact}
           style={{
             background: "#ff9e1d",
-            color: "#ffffff",
+            color: "#1e1e1e",
             border: "none",
-            padding: "12px 24px",
-            borderRadius: "6px",
+            padding: "14px 24px",
+            borderRadius: "8px",
             cursor: "pointer",
-            marginRight: "10px"
+            fontWeight: "600",
+            fontSize: "1rem",
+            transition: "transform 0.2s",
           }}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
         >
           Contacter pour un devis
         </button>
@@ -39,10 +88,15 @@ function Hero() {
             background: "#ffffff",
             color: "#383838",
             border: "none",
-            padding: "12px 24px",
-            borderRadius: "6px",
-            cursor: "pointer"
+            padding: "14px 24px",
+            borderRadius: "8px",
+            cursor: "pointer",
+            fontWeight: "600",
+            fontSize: "1rem",
+            transition: "transform 0.2s",
           }}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
         >
           Pourquoi choisir Dove Services ?
         </button>

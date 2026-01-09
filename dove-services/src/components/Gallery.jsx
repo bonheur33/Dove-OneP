@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-// Images et vidéos à afficher dans la galerie
+// Médias de la galerie
 const media = [
   { type: "image", src: "/images/galerie1.jpg", alt: "Projet communication 1" },
   { type: "image", src: "/images/galerie2.JPG", alt: "Projet audiovisuel 2" },
@@ -12,61 +12,93 @@ const media = [
 function Gallery() {
   const [current, setCurrent] = useState(0);
 
-  // Slider automatique toutes les 5s
+  // Slider automatique (pause sur mobile acceptable)
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrent((prev) => (prev + 1) % media.length);
     }, 5000);
+
     return () => clearInterval(interval);
   }, []);
 
-  const prevSlide = () => setCurrent((prev) => (prev - 1 + media.length) % media.length);
-  const nextSlide = () => setCurrent((prev) => (prev + 1) % media.length);
+  const prevSlide = () =>
+    setCurrent((prev) => (prev - 1 + media.length) % media.length);
+
+  const nextSlide = () =>
+    setCurrent((prev) => (prev + 1) % media.length);
 
   return (
     <section
-      className="gallery"
+      id="gallery"
       style={{
         background: "#383838",
         color: "#ffffff",
-        padding: "60px 8%",
+        padding: "50px 6%",
         textAlign: "center",
       }}
     >
-      <h2 style={{ color: "#ff9e1d", fontSize: "2.5rem", marginBottom: "20px" }}>
+      <h2
+        style={{
+          color: "#ff9e1d",
+          fontSize: "clamp(1.8rem, 5vw, 2.4rem)",
+          marginBottom: "15px",
+        }}
+      >
         Galerie
       </h2>
-      <p style={{ fontSize: "1.2rem", marginBottom: "40px" }}>
-        Découvrez quelques-uns de nos projets en communication, audiovisuel et événementiel.
+
+      <p
+        style={{
+          fontSize: "1rem",
+          maxWidth: "700px",
+          margin: "0 auto 30px",
+          lineHeight: "1.6",
+        }}
+      >
+        Découvrez quelques-uns de nos projets en communication, audiovisuel
+        et événementiel.
       </p>
 
-      {/* Slider */}
+      {/* SLIDER */}
       <div
         style={{
           position: "relative",
+          width: "100%",
           maxWidth: "900px",
           margin: "0 auto",
-          borderRadius: "8px",
+          borderRadius: "10px",
           overflow: "hidden",
+          background: "#000",
         }}
       >
         {media[current].type === "image" ? (
           <img
             src={media[current].src}
             alt={media[current].alt}
-            style={{ width: "100%", maxHeight: "500px", objectFit: "cover" }}
+            loading="lazy"
+            style={{
+              width: "100%",
+              height: "clamp(240px, 60vw, 420px)",
+              objectFit: "cover",
+            }}
           />
         ) : (
           <video
             src={media[current].src}
             controls
-            style={{ width: "100%", maxHeight: "500px", objectFit: "cover" }}
+            playsInline
+            style={{
+              width: "100%",
+              height: "clamp(240px, 60vw, 420px)",
+              objectFit: "cover",
+            }}
           />
         )}
 
-        {/* Boutons précédent / suivant */}
+        {/* BOUTONS */}
         <button
           onClick={prevSlide}
+          aria-label="Image précédente"
           style={{
             position: "absolute",
             top: "50%",
@@ -74,15 +106,20 @@ function Gallery() {
             transform: "translateY(-50%)",
             background: "#ff9e1d",
             border: "none",
-            padding: "8px 12px",
+            width: "42px",
+            height: "42px",
+            borderRadius: "50%",
             cursor: "pointer",
-            borderRadius: "4px",
+            fontSize: "1.2rem",
+            fontWeight: "700",
           }}
         >
-          &#10094;
+          ‹
         </button>
+
         <button
           onClick={nextSlide}
+          aria-label="Image suivante"
           style={{
             position: "absolute",
             top: "50%",
@@ -90,30 +127,39 @@ function Gallery() {
             transform: "translateY(-50%)",
             background: "#ff9e1d",
             border: "none",
-            padding: "8px 12px",
+            width: "42px",
+            height: "42px",
+            borderRadius: "50%",
             cursor: "pointer",
-            borderRadius: "4px",
+            fontSize: "1.2rem",
+            fontWeight: "700",
           }}
         >
-          &#10095;
+          ›
         </button>
       </div>
 
-      {/* Indicateurs */}
-      <div style={{ marginTop: "15px", display: "flex", justifyContent: "center", gap: "8px" }}>
+      {/* INDICATEURS */}
+      <div
+        style={{
+          marginTop: "16px",
+          display: "flex",
+          justifyContent: "center",
+          gap: "10px",
+        }}
+      >
         {media.map((_, i) => (
           <span
             key={i}
             onClick={() => setCurrent(i)}
             style={{
-              width: "12px",
-              height: "12px",
+              width: "14px",
+              height: "14px",
               borderRadius: "50%",
-              background: i === current ? "#ff9e1d" : "#ffffff",
-              display: "inline-block",
+              background: i === current ? "#ff9e1d" : "#cccccc",
               cursor: "pointer",
             }}
-          ></span>
+          />
         ))}
       </div>
     </section>
