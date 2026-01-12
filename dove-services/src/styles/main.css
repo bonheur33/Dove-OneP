@@ -439,3 +439,73 @@ button:hover {
     height: auto;
   }
 }
+.services {
+  padding: 80px 6%;
+  background: #1e1e1e;
+  color: #ffffff;
+  text-align: center;
+}
+
+.services h2 {
+  color: #ff9e1d;
+  font-size: clamp(2rem, 5vw, 2.5rem);
+  margin-bottom: 50px;
+}
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 30px;
+}
+
+.service-card {
+  position: relative;
+  height: 360px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+/* Overlay sombre */
+.service-card .overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;       /* ✅ CENTRAGE VERTICAL */
+  justify-content: center;   /* ✅ CENTRAGE HORIZONTAL */
+  padding: 20px;
+}
+
+/* Contenu texte */
+.service-card .content {
+  max-width: 90%;
+}
+
+.service-card h3 {
+  color: #ff9e1d;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.service-card p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #f1f1f1;
+}
+
+/* Mobile optimisation */
+@media (max-width: 600px) {
+  .service-card {
+    height: 300px;
+  }
+
+  .service-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .service-card p {
+    font-size: 0.9rem;
+  }
+}

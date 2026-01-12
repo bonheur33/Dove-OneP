@@ -27,7 +27,7 @@ function Contact() {
       {/* INFORMATIONS */}
       <div style={{ fontSize: "1.1rem", lineHeight: "1.8", maxWidth: "600px" }}>
         <p>
-          📍 <strong>Localisation :</strong> Brazzaville – Bacongo
+          📍 <strong>Localisation :</strong>  18 bis Rue Dr Cureau, Bacongo – Brazzaville
         </p>
         <p>
           ✉️ <strong>Email :</strong> <a href="mailto:contact@doveservices.cg" style={{ color: "#ff9e1d", textDecoration: "none" }}>contact@doveservices.cg</a>

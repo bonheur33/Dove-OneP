@@ -36,7 +36,7 @@ function Footer() {
         <div>
           <h4 style={{ color: "#ff9e1d", marginBottom: "12px" }}>Contact</h4>
           <p style={{ fontSize: "0.95rem", color: "#dddddd", lineHeight: "1.7" }}>
-            Brazzaville – Bacongo <br />
+            18 bis Rue Dr Cureau, Bacongo – Brazzaville <br />
             Email : <strong>contact@doveservices.cg</strong> <br />
             WhatsApp : <strong>+242 06 42 37 233</strong>
           </p>
