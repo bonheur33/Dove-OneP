@@ -24,7 +24,7 @@ function Gallery() {
     return () => clearInterval(interval);
   }, [current]);
 
-  // 🔄 Forcer la lecture automatique pour les vidéos
+  // ▶️ Forcer la lecture automatique de la vidéo
   useEffect(() => {
     if (media[current].type === "video" && videoRef.current) {
       videoRef.current.currentTime = 0;
@@ -80,6 +80,10 @@ function Gallery() {
           borderRadius: "12px",
           overflow: "hidden",
           background: "#000",
+          minHeight: "clamp(240px, 60vw, 420px)", // ✅ FIX IMPORTANT
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
         {media[current].type === "image" ? (
@@ -87,10 +91,12 @@ function Gallery() {
             src={media[current].src}
             alt={media[current].alt}
             loading="lazy"
+            onError={(e) => (e.target.src = "/images/fallback.jpg")}
             style={{
               width: "100%",
-              height: "clamp(240px, 60vw, 420px)",
+              height: "100%",
               objectFit: "cover",
+              display: "block",
             }}
           />
         ) : (
@@ -102,12 +108,13 @@ function Gallery() {
             loop
             playsInline
             preload="auto"
-            poster="/images/video-cover.jpg" // Assurez-vous d'avoir cette image
+            poster="/images/video-cover.jpg"
             style={{
               width: "100%",
-              height: "clamp(240px, 60vw, 420px)",
+              height: "100%",
               objectFit: "cover",
               backgroundColor: "#000",
+              display: "block",
             }}
           >
             Votre navigateur ne supporte pas la vidéo.
