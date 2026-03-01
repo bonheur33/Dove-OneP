@@ -1,11 +1,19 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import emailjs from "emailjs-com";
 import Modal from "./Modal.jsx";
 
 function EventOffers() {
   const [open, setOpen] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [bgLoaded, setBgLoaded] = useState(false);
   const formRef = useRef(null);
+
+  // Lazy load background image
+  useEffect(() => {
+    const img = new Image();
+    img.src = "/images/event-bg.jpeg";
+    img.onload = () => setBgLoaded(true);
+  }, []);
 
   const redirectWhatsApp = () => {
     const phone = "242064237233";
@@ -45,13 +53,17 @@ function EventOffers() {
       id="event-offers"
       style={{
         position: "relative",
-        backgroundImage: "url('/images/event-bg.jpeg')",
+        backgroundColor: "#1e1e1e", // fallback
+        backgroundImage: bgLoaded
+          ? "url(/images/event-bg.jpeg)"
+          : "none",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
-        padding: "80px 5%",
+        padding: "clamp(70px, 10vw, 100px) 5%",
         color: "#ffffff",
         textAlign: "center",
+        overflow: "hidden",
       }}
     >
       {/* OVERLAY */}
@@ -62,14 +74,22 @@ function EventOffers() {
           backgroundColor: "rgba(0,0,0,0.65)",
           zIndex: 1,
         }}
-      ></div>
+      />
 
       {/* CONTENU */}
-      <div style={{ position: "relative", zIndex: 2 }}>
+      <div
+        style={{
+          position: "relative",
+          zIndex: 2,
+          maxWidth: "900px",
+          margin: "0 auto",
+          animation: "fadeUp 0.9s ease forwards",
+        }}
+      >
         <h2
           style={{
             color: "#ff9e1d",
-            fontSize: "clamp(2rem, 5vw, 2.5rem)",
+            fontSize: "clamp(1.9rem, 5vw, 2.6rem)",
             marginBottom: "20px",
             fontWeight: "700",
           }}
@@ -79,12 +99,11 @@ function EventOffers() {
 
         <p
           style={{
-            fontSize: "clamp(1rem, 2.5vw, 1.2rem)",
-            marginBottom: "30px",
-            maxWidth: "700px",
-            marginLeft: "auto",
-            marginRight: "auto",
-            lineHeight: "1.6",
+            fontSize: "clamp(1rem, 2.6vw, 1.25rem)",
+            marginBottom: "35px",
+            maxWidth: "720px",
+            marginInline: "auto",
+            lineHeight: "1.7",
           }}
         >
           Conférences, séminaires, ateliers et événements privés.
@@ -96,18 +115,18 @@ function EventOffers() {
         <button
           onClick={() => setOpen(true)}
           style={{
-            padding: "14px 36px",
+            padding: "15px 42px",
             backgroundColor: "#ff9e1d",
             border: "none",
-            borderRadius: "8px",
+            borderRadius: "10px",
             cursor: "pointer",
             color: "#1e1e1e",
             fontWeight: "600",
             fontSize: "1rem",
-            transition: "transform 0.2s, background 0.3s",
+            transition: "transform 0.25s ease, background 0.3s ease",
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.transform = "scale(1.05)";
+            e.currentTarget.style.transform = "scale(1.06)";
             e.currentTarget.style.backgroundColor = "#e68a00";
           }}
           onMouseLeave={(e) => {
@@ -121,13 +140,7 @@ function EventOffers() {
         {/* MODAL */}
         {open && (
           <Modal onClose={() => setOpen(false)}>
-            <div
-              style={{
-                maxWidth: "420px",
-                margin: "0 auto",
-                textAlign: "center",
-              }}
-            >
+            <div style={{ maxWidth: "420px", margin: "0 auto" }}>
               <h3 style={{ marginBottom: "15px" }}>
                 Réservation d’événement
               </h3>
@@ -160,8 +173,17 @@ function EventOffers() {
                 }}
               >
                 <input name="nom" placeholder="Nom complet" required />
-                <input name="email" type="email" placeholder="Adresse email" required />
-                <input name="telephone" placeholder="Téléphone / WhatsApp" required />
+                <input
+                  name="email"
+                  type="email"
+                  placeholder="Adresse email"
+                  required
+                />
+                <input
+                  name="telephone"
+                  placeholder="Téléphone / WhatsApp"
+                  required
+                />
 
                 <select name="type_evenement" required>
                   <option value="">Type d’événement</option>
@@ -199,6 +221,22 @@ function EventOffers() {
           </Modal>
         )}
       </div>
+
+      {/* ANIMATION CSS INLINE */}
+      <style>
+        {`
+          @keyframes fadeUp {
+            from {
+              opacity: 0;
+              transform: translateY(25px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+            }
+          }
+        `}
+      </style>
     </section>
   );
 }

@@ -509,3 +509,18 @@ button:hover {
     font-size: 0.9rem;
   }
 }
+.service-card {
+  cursor: pointer;
+}
+
+.service-card ul {
+  margin-top: 1rem;
+}
+
+.service-card .cta {
+  display: inline-block;
+  margin-top: 1rem;
+  font-weight: 600;
+  color: #fff;
+  text-decoration: underline;
+}
