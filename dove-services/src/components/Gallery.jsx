@@ -1,32 +1,34 @@
 import { useState, useEffect, useRef } from "react";
 
 const media = [
-  { type: "image", src: "/images/galerie1.jpg", alt: "Projet communication 1" },
-  { type: "image", src: "/images/galerie2.jpg", alt: "Projet audiovisuel 2" },
-  { type: "image", src: "/images/galerie3.jpg", alt: "Projet événementiel 3" },
-  { type: "video", src: "/videos/reel1.mp4", alt: "Vidéo événement 1" },
-  { type: "video", src: "/videos/reel2.mp4", alt: "Vidéo événement 2" },
-  { type: "image", src: "/images/galerie4.jpg", alt: "Projet communication 4" },
+  { type: "image", src: "/images/galerie1.jpg" },
+  { type: "image", src: "/images/galerie2.jpg" },
+  { type: "image", src: "/images/galerie3.jpg" },
+  { type: "video", src: "/videos/reel1.mp4" },
+  { type: "video", src: "/videos/reel2.mp4" },
+  { type: "image", src: "/images/galerie4.jpg" },
 ];
 
 function Gallery() {
   const [current, setCurrent] = useState(0);
   const videoRef = useRef(null);
-  const intervalRef = useRef(null);
+  const startX = useRef(0);
+  const isDragging = useRef(false);
 
+  // Auto slide images only
   useEffect(() => {
     if (media[current].type === "video") return;
 
-    intervalRef.current = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % media.length);
+    const interval = setInterval(() => {
+      nextSlide();
     }, 5000);
 
-    return () => clearInterval(intervalRef.current);
+    return () => clearInterval(interval);
   }, [current]);
 
+  // Auto play video safely
   useEffect(() => {
     if (media[current].type === "video" && videoRef.current) {
-      videoRef.current.pause();
       videoRef.current.currentTime = 0;
       videoRef.current.play().catch(() => {});
     }
@@ -38,106 +40,117 @@ function Gallery() {
   const nextSlide = () =>
     setCurrent((prev) => (prev + 1) % media.length);
 
+  // 📱 Swipe mobile
+  const handleTouchStart = (e) => {
+    startX.current = e.touches[0].clientX;
+    isDragging.current = true;
+  };
+
+  const handleTouchEnd = (e) => {
+    if (!isDragging.current) return;
+    const endX = e.changedTouches[0].clientX;
+    const diff = startX.current - endX;
+
+    if (diff > 50) nextSlide();
+    if (diff < -50) prevSlide();
+
+    isDragging.current = false;
+  };
+
   return (
     <section
       id="gallery"
       style={{
         background: "#383838",
-        color: "#ffffff",
+        color: "#fff",
         padding: "60px 6%",
         textAlign: "center",
       }}
     >
-      <h2
-        style={{
-          color: "#ff9e1d",
-          fontSize: "clamp(1.8rem, 5vw, 2.4rem)",
-          marginBottom: "15px",
-        }}
-      >
-        Nos réalisations
-      </h2>
+      <h2 style={{ color: "#ff9e1d" }}>Nos réalisations</h2>
 
-      <p
-        style={{
-          fontSize: "1rem",
-          maxWidth: "700px",
-          margin: "0 auto 30px",
-          lineHeight: "1.6",
-        }}
-      >
-        Découvrez quelques-uns de nos projets en communication,
-        audiovisuel et événementiel.
-      </p>
-
-      {/* SLIDER */}
       <div
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
         style={{
           position: "relative",
-          width: "100%",
           maxWidth: "900px",
-          height: "450px", // ✅ HAUTEUR FIXE IDENTIQUE
-          margin: "0 auto",
-          borderRadius: "12px",
+          margin: "40px auto",
+          aspectRatio: "16 / 9",
           overflow: "hidden",
+          borderRadius: "14px",
           background: "#000",
         }}
       >
-        {media[current].type === "image" ? (
-          <img
-            src={media[current].src}
-            alt={media[current].alt}
-            loading="lazy"
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover", // remplit parfaitement
-            }}
-          />
-        ) : (
-          <video
-            ref={videoRef}
-            src={media[current].src}
-            muted
-            loop
-            playsInline
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover", // même comportement que image
-            }}
-          />
-        )}
+        {/* SLIDES WRAPPER */}
+        <div
+          style={{
+            display: "flex",
+            height: "100%",
+            width: `${media.length * 100}%`,
+            transform: `translateX(-${current * (100 / media.length)}%)`,
+            transition: "transform 0.7s ease-in-out",
+          }}
+        >
+          {media.map((item, index) => (
+            <div
+              key={index}
+              style={{
+                width: `${100 / media.length}%`,
+                position: "relative",
+              }}
+            >
+              {item.type === "image" ? (
+                <img
+                  src={item.src}
+                  loading="lazy"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                  }}
+                />
+              ) : (
+                <video
+                  ref={index === current ? videoRef : null}
+                  src={item.src}
+                  muted
+                  playsInline
+                  loop
+                  preload="metadata"
+                  style={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
+                  }}
+                />
+              )}
+            </div>
+          ))}
+        </div>
 
-        {/* NAVIGATION */}
-        <button onClick={prevSlide} style={navButtonStyle("left")}>
+        {/* NAV BUTTONS */}
+        <button onClick={prevSlide} style={navButton("left")}>
           ‹
         </button>
-
-        <button onClick={nextSlide} style={navButtonStyle("right")}>
+        <button onClick={nextSlide} style={navButton("right")}>
           ›
         </button>
       </div>
 
-      {/* INDICATEURS */}
-      <div
-        style={{
-          marginTop: "18px",
-          display: "flex",
-          justifyContent: "center",
-          gap: "10px",
-        }}
-      >
+      {/* INDICATORS */}
+      <div style={{ display: "flex", justifyContent: "center", gap: "8px" }}>
         {media.map((_, i) => (
           <span
             key={i}
             onClick={() => setCurrent(i)}
             style={{
-              width: "14px",
-              height: "14px",
+              width: "12px",
+              height: "12px",
               borderRadius: "50%",
-              background: i === current ? "#ff9e1d" : "#cccccc",
+              background: i === current ? "#ff9e1d" : "#ccc",
               cursor: "pointer",
+              transition: "0.3s",
             }}
           />
         ))}
@@ -146,10 +159,10 @@ function Gallery() {
   );
 }
 
-const navButtonStyle = (side) => ({
+const navButton = (side) => ({
   position: "absolute",
   top: "50%",
-  [side]: "12px",
+  [side]: "15px",
   transform: "translateY(-50%)",
   background: "#ff9e1d",
   border: "none",
@@ -158,7 +171,7 @@ const navButtonStyle = (side) => ({
   borderRadius: "50%",
   cursor: "pointer",
   fontSize: "1.5rem",
-  fontWeight: "700",
+  fontWeight: "bold",
 });
 
 export default Gallery;
